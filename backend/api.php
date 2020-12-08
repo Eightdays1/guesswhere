@@ -17,6 +17,12 @@ switch ($type) {
     case "savegame":
         savegame();
         break;
+    case "changepassword":
+        changePassword();
+        break;
+    case "getstats":
+        getStats();
+        break;
     default:
         echo throwerror("Bad Request");
 }
@@ -142,6 +148,59 @@ function saveGame()
 
     } else {
         echo throwerror("Provided no or wrong accesstoken");
+    }
+}
+
+function changePassword()
+{
+    require 'dbconnection.php';
+
+    $username = $_POST['username'];
+    $oldpassword = $_POST['oldpassword'];
+    $newpassword = $_POST['newpassword'];
+
+    if ($result = $conn->query("SELECT * FROM users WHERE username='$username'")) {
+        $row = $result->fetch_assoc();
+    }
+
+    if (password_verify($oldpassword, $row["password"])) {
+
+        $hashedpw = password_hash($newpassword, PASSWORD_DEFAULT);
+        $result = $conn->query("UPDATE users SET password='$hashedpw' WHERE username = '$username'");
+        if ($result) {
+            $data = ['status' => 'true', 'message' => "password changed"];
+            echo json_encode($data);
+        }
+    } else {
+        echo throwerror("Wrong password provided");
+    }
+
+
+}
+function getStats()
+{
+    require 'dbconnection.php';
+
+    $accesstoken = $_POST['accesstoken'];
+
+
+    if ($result = $conn->query("SELECT * FROM users WHERE accesstoken='$accesstoken'")) {
+        $row = $result->fetch_assoc();
+        $username = $row["username"];
+    }
+
+    if ($accesstoken == $row["accesstoken"]) {
+
+
+        $getstatsquery = $conn->query("SELECT gameid, imagekey, distance, time FROM games WHERE username='$username'");
+
+        $jsonData = array();
+        while ($array = $getstatsquery->fetch_row()) {
+            $jsonData[] = $array;
+        }
+        echo json_encode($jsonData);
+
+
     }
 }
 
