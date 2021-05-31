@@ -12,6 +12,7 @@ public class User extends AppCompatActivity {
     }
 
     public String getUsername(){return Username;}
+
     public String getAccessToken(){return AccessToken;}
 
     public static User factory(String first, String second) {

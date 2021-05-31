@@ -97,6 +97,11 @@ public class GameScreen extends AppCompatActivity {
                     public void onClick(View view) {toMainMenu(); }
                 });
 
+                try {
+                    Database_test.saveGame(MainScreen.user.getAccessToken(), guessed_coordinate_1, guessed_coordinate_2, d);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 break;
         }
     }
