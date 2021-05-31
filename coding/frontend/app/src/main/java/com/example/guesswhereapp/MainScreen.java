@@ -131,11 +131,6 @@ public class MainScreen extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void startMapActivity(){
-        Intent intent = new Intent(this, MapActivity.class);
-        startActivity(intent);
-    }
-
     private void startLocationPickerActivity(){
         Intent intent = new Intent(this, LocationPickerActivity.class);
         startActivity(intent);
