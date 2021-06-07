@@ -8,6 +8,10 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
+    <!-- New colors -->
+    <color name="guesswhere_green">#359D47</color>
+    <color name="guesswhere_greener">#267033</color>
+
     <!-- Mapbox colors -->
     <color name="colorPrimary">@color/mapboxGray</color>
     <color name="colorPrimaryDark">@color/mapboxGrayDark10</color>

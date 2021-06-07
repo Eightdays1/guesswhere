@@ -282,7 +282,7 @@ public class Database_test extends AppCompatActivity {
     }
 
     public static boolean saveGame(String accesstoken, float guessedcoor1, float guessedcoor2, double distance) throws IOException{
-        String request        = "http://api.guesswhere.net/api.php?type=requestnewgame";
+        String request        = "http://api.guesswhere.net/api.php?type=savegame";
         URL    url            = new URL( request );
         HttpURLConnection conn= (HttpURLConnection) url.openConnection();
 
@@ -327,7 +327,7 @@ public class Database_test extends AppCompatActivity {
     }
 
     public static void requestStatistic(String accesstoken) throws IOException {
-        String request        = "http://api.guesswhere.net/api.php?type=changepassword";
+        String request        = "http://api.guesswhere.net/api.php?type=getstats";
         URL    url            = new URL( request );
         HttpURLConnection conn= (HttpURLConnection) url.openConnection();
 

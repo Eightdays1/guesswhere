@@ -52,7 +52,7 @@ public class MainScreen extends AppCompatActivity {
             });
 
             button_help.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View view) { startLocationPickerActivity(); }
+                public void onClick(View view) { startHelpActivity(); }
             });
 
         } else { //Logged in Screen
@@ -128,11 +128,6 @@ public class MainScreen extends AppCompatActivity {
 
     private void startHelpActivity(){
         Intent intent = new Intent(this, HelpScreen.class);
-        startActivity(intent);
-    }
-
-    private void startLocationPickerActivity(){
-        Intent intent = new Intent(this, LocationPickerActivity.class);
         startActivity(intent);
     }
 

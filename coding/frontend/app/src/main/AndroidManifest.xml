@@ -12,7 +12,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.FirstTest"
+        android:theme="@style/Theme.GuessWhere"
         android:usesCleartextTraffic="true">
         <!--
                Set to true if your app is Standalone, that is, it does not require the handheld
@@ -20,8 +20,8 @@
         -->
 
         <activity
-            android:name=".LocationPickerActivity"
-            android:label="@string/title_activity_location_picker">
+            android:name=".MainScreen"
+            android:label="@string/guesswhere">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -35,13 +35,7 @@
         <activity android:name=".OptionsScreen" />
         <activity android:name=".RegisterScreen" />
         <activity android:name=".LoginScreen" />
-        <activity android:name=".MainScreen">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".LocationPickerActivity" />
     </application>
 
 </manifest>

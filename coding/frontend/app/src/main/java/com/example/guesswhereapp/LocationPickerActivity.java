@@ -1,7 +1,5 @@
 package com.example.guesswhereapp;
 
-//package com.mapbox.mapboxandroiddemo.examples.labs;
-
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;

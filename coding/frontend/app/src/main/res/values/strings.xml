@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">FirstTest</string>
+    <string name="app_name">GuessWhere</string>
     <string name="guesswhere">GuessWhere</string>
     <string name="login">Login</string>
     <string name="options">Options</string>
