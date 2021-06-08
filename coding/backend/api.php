@@ -23,6 +23,9 @@ switch ($type) {
     case "getstats":
         getStats();
         break;
+    case "deletestats":
+        deleteStats();
+        break;
     default:
         echo throwerror("Bad Request");
 }
@@ -112,10 +115,10 @@ function requestNewGame()
         $coordinate1 = $row["coordinate1"];
         $coordinate2 = $row["coordinate2"];
         $username = $row1["username"];
+        $gameid = bin2hex(random_bytes(16));
+        $conn->query("INSERT INTO games (username, gameid, coor1, coor2, imagekey) VALUES ('$username', '$gameid', '$coordinate1','$coordinate2', '$imagekey')");
 
-        $conn->query("INSERT INTO games (username, coor1, coor2, imagekey) VALUES ('$username', '$coordinate1','$coordinate2', '$imagekey')");
-
-        $data = ['status' => 'true', 'imagekey' => $imagekey, 'coordinate1' => $coordinate1, 'coordinate2' => $coordinate2];
+        $data = ['status' => 'true', 'imagekey' => $imagekey, 'coordinate1' => $coordinate1, 'coordinate2' => $coordinate2, 'gameid' => $gameid];
         echo json_encode($data);
 
     } else {
@@ -127,27 +130,22 @@ function saveGame()
 {
     require 'dbconnection.php';
 
-    $accesstoken = $_POST['accesstoken'];
+    $gameid = $_POST['gameid'];
     $guessedcoor1 = $_POST['guessed_coor1'];
     $guessedcoor2 = $_POST['guessed_coor2'];
     $distance = $_POST['distance'];
 
-    if ($resultcheck = $conn->query("SELECT * FROM users WHERE accesstoken = '$accesstoken'")) {
-        $row1 = $resultcheck->fetch_assoc();
 
-    }
+    if ($conn->query("SELECT * FROM games WHERE gameid = '$gameid'")) {
 
-
-    if ($row1['accesstoken'] == $accesstoken) {
-        $username = $row1["username"];
-        $conn->query("UPDATE games SET guessed_coor1='$guessedcoor1',guessed_coor2='$guessedcoor2',distance='$distance' WHERE username = '$username'");
+        $conn->query("UPDATE games SET guessed_coor1='$guessedcoor1',guessed_coor2='$guessedcoor2',distance='$distance' WHERE gameid = '$gameid'");
 
 
         $data = ['status' => 'true', 'message' => "game saved"];
         echo json_encode($data);
 
     } else {
-        echo throwerror("Provided no or wrong accesstoken");
+        echo throwerror("Provided no or wrong gameid");
     }
 }
 
@@ -203,6 +201,28 @@ function getStats()
 
 
     }
+}
+
+function deleteStats()
+{
+    require 'dbconnection.php';
+
+    $accesstoken = $_POST['accesstoken'];
+
+
+    if ($result = $conn->query("SELECT * FROM users WHERE accesstoken='$accesstoken'")) {
+        $row = $result->fetch_assoc();
+        $username = $row["username"];
+        $deletestatsquery = $conn->query("DELETE FROM games WHERE username= '$username'");
+        if ($deletestatsquery) {
+            $data = ['status' => "stats deleted"];
+            echo json_encode($data);
+        } else {
+            echo throwerror("Error while deleting stats!");
+        }
+    }
+
+
 }
 
 ?>
