@@ -49,7 +49,8 @@ public class StatisticsScreen extends AppCompatActivity {
         System.out.println(data);
         String j = data.replace("[", "");
         String k = j.replace("]", "");
-        String[] array = k.split(",");
+        String l = k.replace("\"", "");
+        String[] array = l.split(",");
         TextView textSpacer = null;
         System.out.println(array.length);
         for(int i = -1; i < array.length / 3; i++){
@@ -86,7 +87,7 @@ public class StatisticsScreen extends AppCompatActivity {
                 tv2.setText("Distance");
             }
             else {
-                tv2.setText(String.valueOf(array[(i*3) + 1]));
+                tv2.setText(String.valueOf(array[(i*3) + 1]) + " km");
             }
 
             final TextView tv3 = new TextView(this);
