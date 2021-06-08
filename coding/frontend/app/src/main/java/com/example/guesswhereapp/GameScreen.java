@@ -24,6 +24,8 @@ public class GameScreen extends AppCompatActivity {
     public static float guessed_coordinate_1;
     public static float guessed_coordinate_2;
 
+    public static String gameid;
+
     public static int whichscreen = 0;
 
     ImageView imageView;
@@ -98,7 +100,7 @@ public class GameScreen extends AppCompatActivity {
                 });
 
                 try {
-                    Database_test.saveGame(MainScreen.user.getAccessToken(), guessed_coordinate_2, guessed_coordinate_1, d);
+                    Database_test.saveGame(GameScreen.gameid, guessed_coordinate_2, guessed_coordinate_1, d);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

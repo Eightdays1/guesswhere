@@ -270,12 +270,12 @@ public class LocationPickerActivity extends AppCompatActivity implements Permiss
                             // If the geocoder returns a result, we take the first in the list and show a Toast with the place name.
                             mapboxMap.getStyle(new Style.OnStyleLoaded() {
                                 @Override
-                                public void onStyleLoaded(@NonNull Style style) {
+                                public void onStyleLoaded(@NonNull Style style) {/*
                                     if (style.getLayer(DROPPED_MARKER_LAYER_ID) != null) {
                                         Toast.makeText(LocationPickerActivity.this,
                                                 String.format(getString(R.string.location_picker_place_name_result),
                                                         feature.center()), Toast.LENGTH_SHORT).show();//placeName()
-                                    }
+                                    }*/
                                 }
                             });
                             GameScreen.guessed_coordinate_1 = (float)feature.center().longitude();

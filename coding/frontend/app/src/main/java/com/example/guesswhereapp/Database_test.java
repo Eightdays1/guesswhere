@@ -4,6 +4,9 @@ import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -12,6 +15,7 @@ import java.nio.charset.StandardCharsets;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 public class Database_test extends AppCompatActivity {
 
@@ -231,6 +235,9 @@ public class Database_test extends AppCompatActivity {
             if (i.startsWith("coordinate2:")){
                 GameScreen.coordinate_1 = Float.parseFloat(i.substring(12));
             }
+            if (i.startsWith("gameid:")){
+                GameScreen.gameid = i.replace("gameid:", "");
+            }
         }
 
         return "https://images.mapillary.com/" + image_url + "/thumb-2048.jpg";
@@ -281,13 +288,13 @@ public class Database_test extends AppCompatActivity {
         return status;
     }
 
-    public static boolean saveGame(String accesstoken, float guessedcoor1, float guessedcoor2, double distance) throws IOException{
+    public static boolean saveGame(String gameid, float guessedcoor1, float guessedcoor2, double distance) throws IOException{
         String request        = "http://api.guesswhere.net/api.php?type=savegame";
         URL    url            = new URL( request );
         HttpURLConnection conn= (HttpURLConnection) url.openConnection();
 
         //Request-Header
-        String urlParameters  = "accesstoken=" + accesstoken + "&guessed_coor1=" + guessedcoor1 + "&guessed_coor2=" + guessedcoor2 + "&distance=" + distance;
+        String urlParameters  = "gameid=" + gameid + "&guessed_coor1=" + guessedcoor1 + "&guessed_coor2=" + guessedcoor2 + "&distance=" + distance;
         byte[] postData       = urlParameters.getBytes( StandardCharsets.UTF_8 );
         int    postDataLength = postData.length;
         conn.setRequestMethod( "POST" );
@@ -326,7 +333,7 @@ public class Database_test extends AppCompatActivity {
         return status;
     }
 
-    public static void requestStatistic(String accesstoken) throws IOException {
+    public static String requestStatistic(String accesstoken) throws IOException {
         String request        = "http://api.guesswhere.net/api.php?type=getstats";
         URL    url            = new URL( request );
         HttpURLConnection conn= (HttpURLConnection) url.openConnection();
@@ -355,22 +362,11 @@ public class Database_test extends AppCompatActivity {
         }
         in.close();
 
-        System.out.println(response);
-
-        /*
-        ArrayList<String> listdata = new ArrayList<String>();
-        JSONArray jArray = (JSONArray) jsonObject;
-        if (jArray != null) {
-            for (int i=0;i<jArray.length();i++){
-                listdata.add(jArray.getString(i));
-            }
-        }
-        */
+        return response.toString();
     }
 
-    /*
-    public static JSONArray requestStatistic(String accesstoken) throws IOException, JSONException {
-        String request        = "http://api.guesswhere.net/api.php?type=changepassword";
+    public static String deleteStatistic(String accesstoken) throws IOException {
+        String request        = "http://api.guesswhere.net/api.php?type=deletestats";
         URL    url            = new URL( request );
         HttpURLConnection conn= (HttpURLConnection) url.openConnection();
 
@@ -398,15 +394,7 @@ public class Database_test extends AppCompatActivity {
         }
         in.close();
 
-        ArrayList<String> listdata = new ArrayList<String>();
-        JSONArray jArray = (JSONArray) jsonObject;
-        if (jArray != null) {
-            for (int i=0;i<jArray.length();i++){
-                listdata.add(jArray.getString(i));
-            }
-        }
-        return null;
+        return response.toString();
     }
-    */
 }
 
