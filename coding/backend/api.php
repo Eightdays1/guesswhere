@@ -26,6 +26,12 @@ switch ($type) {
     case "deletestats":
         deleteStats();
         break;
+    case "getbestplayer":
+        getBestPlayer();
+        break;
+    case "getleaderboard":
+        getLeaderboard();
+        break;
     default:
         echo throwerror("Bad Request");
 }
@@ -133,7 +139,8 @@ function saveGame()
     $gameid = $_POST['gameid'];
     $guessedcoor1 = $_POST['guessed_coor1'];
     $guessedcoor2 = $_POST['guessed_coor2'];
-    $distance = $_POST['distance'];
+    $distancelong = $_POST['distance'];
+    $distance = round($distancelong, 2);
 
 
     if ($conn->query("SELECT * FROM games WHERE gameid = '$gameid'")) {
@@ -191,7 +198,7 @@ function getStats()
     if ($accesstoken == $row["accesstoken"]) {
 
 
-        $getstatsquery = $conn->query("SELECT gameid, imagekey, distance, time FROM games WHERE username='$username'");
+        $getstatsquery = $conn->query("SELECT imagekey, distance, time FROM games WHERE username='$username'");
 
         $jsonData = array();
         while ($array = $getstatsquery->fetch_row()) {
@@ -224,5 +231,36 @@ function deleteStats()
 
 
 }
+
+function getBestPlayer()
+{
+    require 'dbconnection.php';
+
+
+    $bestplayer = $conn->query("SELECT username FROM games WHERE distance = (select min(distance) from games);");
+
+    $jsonData = array();
+    while ($array = $bestplayer->fetch_row()) {
+        $jsonData[] = $array;
+    }
+    echo json_encode($jsonData);
+
+}
+
+function getLeaderboard()
+{
+    require 'dbconnection.php';
+
+
+    $leaderboard = $conn->query("SELECT username, distance, time FROM games ORDER BY distance ASC");
+
+    $jsonData = array();
+    while ($array = $leaderboard->fetch_row()) {
+        $jsonData[] = $array;
+    }
+    echo json_encode($jsonData);
+
+}
+
 
 ?>
