@@ -9,6 +9,9 @@ title __GUESSWHEREAPP's Class Diagram__\n
         {static} + database_check()
         {static} + getNewImage()
         {static} + request_access_token()
+        {static} + saveGame()
+        {static} + requestStatistic()
+        {static} + deleteStatistic()
     }
   }
   
@@ -134,6 +137,8 @@ title __GUESSWHEREAPP's Class Diagram__\n
   namespace com.example.guesswhereapp {
     class com.example.guesswhereapp.StatisticsScreen {
         # onCreate()
+        {static} + loadData()
+        {static} + deleteStatistics()
     }
   }
   
