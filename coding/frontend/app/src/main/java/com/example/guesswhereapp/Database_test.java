@@ -396,5 +396,37 @@ public class Database_test extends AppCompatActivity {
 
         return response.toString();
     }
+
+    public static void deleteUser(String accesstoken) throws IOException {
+        String request        = "http://api.guesswhere.net/api.php?type=deleteuser";
+        URL    url            = new URL( request );
+        HttpURLConnection conn= (HttpURLConnection) url.openConnection();
+
+        //Request-Header
+        String urlParameters  = "accesstoken=" + accesstoken;
+        byte[] postData       = urlParameters.getBytes( StandardCharsets.UTF_8 );
+        int    postDataLength = postData.length;
+        conn.setRequestMethod( "POST" );
+
+        //Send Post-Request
+        conn.setDoOutput(true);
+        conn.setRequestProperty( "charset", "utf-8");
+
+        DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
+        wr.writeBytes(urlParameters);
+        wr.flush();
+        wr.close();
+
+        BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+        String inputLine;
+        StringBuilder response = new StringBuilder();
+
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+
+        System.out.println(response.toString());
+    }
 }
 

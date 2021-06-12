@@ -11,11 +11,23 @@
         android:layout_width="264dp"
         android:layout_height="60dp"
         android:text="@string/change_password"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/button_deleteUser"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.451" />
+
+    <Button
+        android:id="@+id/button_deleteUser"
+        android:layout_width="264dp"
+        android:layout_height="60dp"
+        android:text="Delete User"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.572" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

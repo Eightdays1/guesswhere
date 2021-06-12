@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -20,11 +21,25 @@ public class OptionsScreen extends AppCompatActivity {
                 setContentView(R.layout.activity_options);
 
                 Button button_changePassword = (Button) findViewById(R.id.button_changePassword);
+                Button button_deleteUser = (Button) findViewById(R.id.button_deleteUser);
 
                 button_changePassword.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View view) {
                         whichscreen = 2;
                         startAnotherOptionsActivity();
+                    }
+                });
+
+                button_deleteUser.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View view) {
+                        try {
+                            Database_test.deleteUser(MainScreen.user.getAccessToken());
+                            whichscreen = 0;
+                            MainScreen.user = null;
+                            toMainMenu();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
                 break;
@@ -66,5 +81,12 @@ public class OptionsScreen extends AppCompatActivity {
     private void openDialog() {
         Popup popup = new Popup();
         popup.show(getSupportFragmentManager(), "label");
+    }
+
+    private void toMainMenu(){
+        Intent intent = new Intent(OptionsScreen.this, MainScreen.class);
+        // set the new task and clear flags
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 }
