@@ -113,11 +113,16 @@ public class GameScreen extends AppCompatActivity {
 
                 Button button_play_again = (Button) findViewById(R.id.button_play_again);
                 Button button_main_menu = (Button) findViewById(R.id.button_main_menu);
+                Button button_see_on_map = (Button) findViewById(R.id.button_see_on_map);
+
                 button_play_again.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View view) {playAnotherGame(); }
                 });
                 button_main_menu.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View view) {toMainMenu(); }
+                });
+                button_see_on_map.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View view) {toMapResult(); }
                 });
 
                 try {
@@ -151,6 +156,11 @@ public class GameScreen extends AppCompatActivity {
         Intent intent = new Intent(GameScreen.this, MainScreen.class);
         // set the new task and clear flags
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+    }
+
+    private void toMapResult(){
+        Intent intent = new Intent(GameScreen.this, MapResult.class);
         startActivity(intent);
     }
 }

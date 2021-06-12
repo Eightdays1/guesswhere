@@ -3,7 +3,6 @@
     package="com.example.guesswhereapp">
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -14,16 +13,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GuessWhere"
         android:usesCleartextTraffic="true">
+        <activity android:name=".MapResult"></activity>
         <!--
                Set to true if your app is Standalone, that is, it does not require the handheld
                app to run.
         -->
-
         <activity
             android:name=".MainScreen"
             android:label="@string/guesswhere">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
