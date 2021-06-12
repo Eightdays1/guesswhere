@@ -92,7 +92,6 @@ public class MapResult extends AppCompatActivity implements
 // Map is set up and the style has loaded. Now you can add additional data or make other map adjustments.
                 LatLng latLng_1 = new LatLng(GameScreen.coordinate_2, GameScreen.coordinate_1);
                 LatLng latLng_2 = new LatLng(GameScreen.guessed_coordinate_2, GameScreen.guessed_coordinate_1);
-                int distanceInInt = (int) (GameScreen.distance / 1000);
                 LatLngBounds latLngBounds = new LatLngBounds.Builder()
                         .include(latLng_1)
                         .include(latLng_2)
