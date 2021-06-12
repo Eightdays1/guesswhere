@@ -37,10 +37,18 @@ public class GameScreen extends AppCompatActivity {
                 super.onCreate(savedInstanceState);
                 setContentView(R.layout.activity_game_select_screen);
                 Button button_singleplayer = (Button) findViewById(R.id.button_singleplayer);
+                Button button_challengeUser = (Button) findViewById(R.id.button_challengeUser);
 
                 button_singleplayer.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View view) {
                         whichscreen = 1;
+                        startAnotherGameActivity();
+                    }
+                });
+
+                button_challengeUser.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View view) {
+                        whichscreen = 2;
                         startAnotherGameActivity();
                     }
                 });
@@ -67,6 +75,19 @@ public class GameScreen extends AppCompatActivity {
                 });
                 break;
             case 2://Challenge User
+                super.onCreate(savedInstanceState);
+                setContentView(R.layout.activity_game_select_user_screen);
+                TextView textedit_challengedUser = (TextView) findViewById(R.id.textedit_challengedname);
+                Button button_confirmChallenge = (Button) findViewById(R.id.button_confirmChallenge);
+
+                button_confirmChallenge.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View view) {
+                        //database request
+                        String name = MainScreen.user.getUsername();
+                        String challenged_user_name = textedit_challengedUser.getText().toString();
+                        //Fix once backend is there
+                    }
+                });
                 break;
             case 3://GameOver
                 super.onCreate(savedInstanceState);
