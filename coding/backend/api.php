@@ -1,5 +1,5 @@
 <?php
-error_reporting(0);
+error_reporting(E_ALL);
 $type = $_GET['type'];
 switch ($type) {
     case "requestaccesstoken":
@@ -31,6 +31,9 @@ switch ($type) {
         break;
     case "getleaderboard":
         getLeaderboard();
+        break;
+    case "deleteuser":
+        deleteUser();
         break;
     default:
         echo throwerror("Bad Request");
@@ -222,7 +225,7 @@ function deleteStats()
         $username = $row["username"];
         $deletestatsquery = $conn->query("DELETE FROM games WHERE username= '$username'");
         if ($deletestatsquery) {
-            $data = ['status' => "stats deleted"];
+            $data = ['status' => 'true', 'message' => "stats deleted"];
             echo json_encode($data);
         } else {
             echo throwerror("Error while deleting stats!");
@@ -259,6 +262,29 @@ function getLeaderboard()
         $jsonData[] = $array;
     }
     echo json_encode($jsonData);
+
+}
+
+function deleteUser()
+{
+    require 'dbconnection.php';
+
+    $accesstoken = $_POST['accesstoken'];
+
+
+    if ($result = $conn->query("SELECT * FROM users WHERE accesstoken='$accesstoken'")) {
+        $row = $result->fetch_assoc();
+        $username = $row["username"];
+        $deletestatsquery = $conn->query("DELETE FROM games WHERE username= '$username'");
+        $deleteuserquery = $conn->query("DELETE FROM users WHERE username= '$username'");
+        if ($deletestatsquery && $deleteuserquery) {
+            $data = ['status' => 'true', 'message' => "user deleted"];
+            echo json_encode($data);
+        } else {
+            echo throwerror("Error while deleting user!");
+        }
+    }
+
 
 }
 
