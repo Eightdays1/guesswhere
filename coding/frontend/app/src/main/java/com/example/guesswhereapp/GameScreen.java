@@ -104,12 +104,8 @@ public class GameScreen extends AppCompatActivity {
                 final double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
                 final double d = radius * c / 1000; // in kilometres
 
-                float difference_x = abs(coordinate_1 - guessed_coordinate_1);
-                float difference_y = abs(coordinate_2 - guessed_coordinate_2);
-
                 TextView x_coord_result = (TextView) findViewById(R.id.x_coord_result);
                 x_coord_result.setText("Dein Tipp war " + round(d) + " Kilometer entfernt!");
-                //x_coord_result.setText("Deine X-Koordinate war " + difference_x + " entfernt!");
 
                 Button button_play_again = (Button) findViewById(R.id.button_play_again);
                 Button button_main_menu = (Button) findViewById(R.id.button_main_menu);

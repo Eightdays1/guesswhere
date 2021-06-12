@@ -11,6 +11,10 @@ import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.geojson.Point;
 //import com.mapbox.mapboxandroiddemo.R;
 import com.mapbox.mapboxsdk.Mapbox;
+import com.mapbox.mapboxsdk.camera.CameraPosition;
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
+import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.geometry.LatLngBounds;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
@@ -86,7 +90,14 @@ public class MapResult extends AppCompatActivity implements
             public void onStyleLoaded(@NonNull Style style) {
 
 // Map is set up and the style has loaded. Now you can add additional data or make other map adjustments.
-
+                LatLng latLng_1 = new LatLng(GameScreen.coordinate_2, GameScreen.coordinate_1);
+                LatLng latLng_2 = new LatLng(GameScreen.guessed_coordinate_2, GameScreen.guessed_coordinate_1);
+                int distanceInInt = (int) (GameScreen.distance / 1000);
+                LatLngBounds latLngBounds = new LatLngBounds.Builder()
+                        .include(latLng_1)
+                        .include(latLng_2)
+                        .build();
+                mapboxMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 10));
 
             }
         });
