@@ -1,6 +1,8 @@
 <?php
+
 error_reporting(E_ALL);
 $type = $_GET['type'];
+include 'challenges.php';
 switch ($type) {
     case "requestaccesstoken":
         requestAccessToken();
@@ -34,6 +36,24 @@ switch ($type) {
         break;
     case "deleteuser":
         deleteUser();
+        break;
+    case "requestchallenge":
+        requestChallenge();
+        break;
+    case "playchallengedgame":
+        playChallengedGame();
+        break;
+    case "savechallengegame":
+        saveChallengeGame();
+        break;
+    case "checkforchallenge":
+        checkForChallenge();
+        break;
+    case "challengeresult":
+        challengeResult();
+        break;
+    case "deletechallenge":
+        deleteChallenge();
         break;
     default:
         echo throwerror("Bad Request");
@@ -80,7 +100,8 @@ function createUser()
         if ($result->num_rows === 0) {
             $hashedpw = password_hash($password, PASSWORD_DEFAULT);
             $create = $conn->query("INSERT INTO users (username, password) VALUES ('$username','$hashedpw')");
-            if ($create = true) {
+            $createchallengeoption = $conn->query("INSERT INTO challenge_requests (username, has_been_challenged) VALUES ('$username',false)");
+            if ($create = true && $createchallengeoption = true) {
                 $data = ['status' => "user_created"];
                 echo json_encode($data);
             }
