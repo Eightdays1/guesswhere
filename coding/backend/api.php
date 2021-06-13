@@ -52,6 +52,9 @@ switch ($type) {
     case "challengeresult":
         challengeResult();
         break;
+    case "deletechallenge":
+        deleteChallenge();
+        break;
     default:
         echo throwerror("Bad Request");
 }

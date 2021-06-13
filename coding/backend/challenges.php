@@ -1,5 +1,27 @@
 <?php
 
+function deleteChallenge()
+{
+    require 'dbconnection.php';
+
+    $accesstoken = $_POST['accesstoken'];
+
+
+    if ($result = $conn->query("SELECT * FROM users WHERE accesstoken='$accesstoken'")) {
+        $row = $result->fetch_assoc();
+        $username = $row["username"];
+        $deletechallengequery = $conn->query("DELETE FROM challenges WHERE username_sender = '$username' OR username_reciever = '$username'");
+        if ($deletechallengequery) {
+            $data = ['status' => 'true', 'message' => "challenge deleted"];
+            echo json_encode($data);
+        } else {
+            echo throwerror("Error while deleting the challenge!");
+        }
+    }
+
+
+}
+
 function challengeResult()
 {
     require 'dbconnection.php';
@@ -22,7 +44,7 @@ function challengeResult()
             $resultreciever = $conn->query("SELECT distance FROM challenges WHERE played_by = '$username_reciever'");
             $resultdistancereciever = $resultreciever->fetch_assoc();
             $recieverdistance = $resultdistancereciever['distance'];
-
+            $conn->query("UPDATE challenge_requests SET has_been_challenged=false WHERE username = '$username_reciever'");
             $data = ['status' => 'true', 'username_sender' => $username_sender, 'distance_sender' => $senderdistance, 'username_reciever' => $username_reciever, 'distance_reciever' => $recieverdistance];
             echo json_encode($data);
         } else {
