@@ -84,6 +84,8 @@
     <string name="delete">Delete</string>
     <string name="return_main">Return</string>
     <string name="see_on_map">See on Map</string>
+    <string name="check_challenge">Check Challenge</string>
+    <string name="check_results">Check Results</string>
 
     <!--PulsingLayerOpacityColorActivity activity-->
 

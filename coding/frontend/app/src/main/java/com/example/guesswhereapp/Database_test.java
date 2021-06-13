@@ -425,8 +425,265 @@ public class Database_test extends AppCompatActivity {
             response.append(inputLine);
         }
         in.close();
+    }
 
-        System.out.println(response.toString());
+    public static String requestChallenge(String accesstoken, String username_reciever) throws IOException {
+        String request        = "http://api.guesswhere.net/api.php?type=requestchallenge";
+        URL    url            = new URL( request );
+        HttpURLConnection conn= (HttpURLConnection) url.openConnection();
+
+        //Request-Header
+        String urlParameters  = "accesstoken=" + accesstoken + "&username_reciever=" + username_reciever;
+        byte[] postData       = urlParameters.getBytes( StandardCharsets.UTF_8 );
+        int    postDataLength = postData.length;
+        conn.setRequestMethod( "POST" );
+
+        //Send Post-Request
+        conn.setDoOutput(true);
+        conn.setRequestProperty( "charset", "utf-8");
+
+        DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
+        wr.writeBytes(urlParameters);
+        wr.flush();
+        wr.close();
+
+        BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+        String inputLine;
+        StringBuilder response = new StringBuilder();
+
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+
+        String answer = response.toString();
+        answer = answer.replace("\"", "");
+        answer = answer.replace("{", "");
+        answer = answer.replace("}", "");
+        String status = "false";
+        String image_url = "";
+
+        System.out.println(answer);
+
+        String[] array = answer.split(",");
+        for(String i: array){
+            if (i.startsWith("status:")){
+                status = i.substring(7);
+            }
+            if (i.startsWith("imagekey:")){
+                image_url = i.substring(9);
+            }
+            if (i.startsWith("coordinate1:")){
+                GameScreen.coordinate_2 = Float.parseFloat(i.substring(12));
+            }
+            if (i.startsWith("coordinate2:")){
+                GameScreen.coordinate_1 = Float.parseFloat(i.substring(12));
+            }
+            if (i.startsWith("gameid:")){
+                GameScreen.gameid = i.replace("gameid:", "");
+            }
+        }
+
+        if (image_url != "") {
+            return "https://images.mapillary.com/" + image_url + "/thumb-2048.jpg";
+        } else {
+            return "False";
+        }
+    }
+
+    public static boolean saveChallenge(String accesstoken, String usertype, String gameid, float guessedcoor1, float guessedcoor2, double distance) throws IOException {
+        String request        = "http://api.guesswhere.net/api.php?type=savechallengegame";
+        URL    url            = new URL( request );
+        HttpURLConnection conn= (HttpURLConnection) url.openConnection();
+
+        //Request-Header
+        String urlParameters  = "accesstoken=" + accesstoken + "&gameid=" + gameid + "&usertype=" + usertype + "&guessed_coor1=" + guessedcoor1 + "&guessed_coor2=" + guessedcoor2 + "&distance=" + distance;
+        byte[] postData       = urlParameters.getBytes( StandardCharsets.UTF_8 );
+        int    postDataLength = postData.length;
+        conn.setRequestMethod( "POST" );
+
+        //Send Post-Request
+        conn.setDoOutput(true);
+        conn.setRequestProperty( "charset", "utf-8");
+
+        DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
+        wr.writeBytes(urlParameters);
+        wr.flush();
+        wr.close();
+
+        BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+        String inputLine;
+        StringBuilder response = new StringBuilder();
+
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+
+        String answer = response.toString();
+        answer = answer.replace("\"", "");
+        answer = answer.replace("{", "");
+        answer = answer.replace("}", "");
+        boolean status = false;
+
+        System.out.println(answer);
+
+        String[] array = answer.split(",");
+        for(String i: array){
+            if (i.startsWith("status:")){
+                status = Boolean.parseBoolean(i.substring(7));
+            }
+        }
+
+        return status;
+    }
+
+    public static boolean checkForChallenge(String accesstoken) throws IOException {
+        String request        = "http://api.guesswhere.net/api.php?type=checkforchallenge";
+        URL    url            = new URL( request );
+        HttpURLConnection conn= (HttpURLConnection) url.openConnection();
+
+        //Request-Header
+        String urlParameters  = "accesstoken=" + accesstoken;
+        byte[] postData       = urlParameters.getBytes( StandardCharsets.UTF_8 );
+        int    postDataLength = postData.length;
+        conn.setRequestMethod( "POST" );
+
+        //Send Post-Request
+        conn.setDoOutput(true);
+        conn.setRequestProperty( "charset", "utf-8");
+
+        DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
+        wr.writeBytes(urlParameters);
+        wr.flush();
+        wr.close();
+
+        BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+        String inputLine;
+        StringBuilder response = new StringBuilder();
+
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+
+        String answer = response.toString();
+        answer = answer.replace("\"", "");
+        answer = answer.replace("{", "");
+        answer = answer.replace("}", "");
+        boolean status = false;
+        boolean challenged = false;
+
+        System.out.println(answer);
+
+        String[] array = answer.split(",");
+        for(String i: array){
+            if (i.startsWith("status:")){
+                status = Boolean.parseBoolean(i.substring(7));
+            }
+            if (i.startsWith("challenged:")){
+                challenged = Boolean.parseBoolean(i.substring(11));
+            }
+        }
+
+        return challenged;
+    }
+
+    public static String playChallengedGame(String accesstoken) throws IOException {
+        String request        = "http://api.guesswhere.net/api.php?type=playchallengedgame";
+        URL    url            = new URL( request );
+        HttpURLConnection conn= (HttpURLConnection) url.openConnection();
+
+        //Request-Header
+        String urlParameters  = "accesstoken=" + accesstoken;
+        byte[] postData       = urlParameters.getBytes( StandardCharsets.UTF_8 );
+        int    postDataLength = postData.length;
+        conn.setRequestMethod( "POST" );
+
+        //Send Post-Request
+        conn.setDoOutput(true);
+        conn.setRequestProperty( "charset", "utf-8");
+
+        DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
+        wr.writeBytes(urlParameters);
+        wr.flush();
+        wr.close();
+
+        BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+        String inputLine;
+        StringBuilder response = new StringBuilder();
+
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+
+        String answer = response.toString();
+        answer = answer.replace("\"", "");
+        answer = answer.replace("{", "");
+        answer = answer.replace("}", "");
+        String status = "false";
+        String image_url = "";
+
+        System.out.println(answer);
+
+        String[] array = answer.split(",");
+        for(String i: array){
+            if (i.startsWith("status:")){
+                status = i.substring(7);
+            }
+            if (i.startsWith("imagekey:")){
+                image_url = i.substring(9);
+            }
+            if (i.startsWith("coordinate1:")){
+                GameScreen.coordinate_2 = Float.parseFloat(i.substring(12));
+            }
+            if (i.startsWith("coordinate2:")){
+                GameScreen.coordinate_1 = Float.parseFloat(i.substring(12));
+            }
+            if (i.startsWith("gameid:")){
+                GameScreen.gameid = i.replace("gameid:", "");
+            }
+        }
+
+        if (image_url.equals("")) {
+            return "False";
+        } else {
+            return "https://images.mapillary.com/" + image_url + "/thumb-2048.jpg";
+        }
+    }
+
+    public static String challengeResult(String accesstoken) throws IOException {
+        String request        = "http://api.guesswhere.net/api.php?type=challengeresult";
+        URL    url            = new URL( request );
+        HttpURLConnection conn= (HttpURLConnection) url.openConnection();
+
+        //Request-Header
+        String urlParameters  = "accesstoken=" + accesstoken;
+        byte[] postData       = urlParameters.getBytes( StandardCharsets.UTF_8 );
+        int    postDataLength = postData.length;
+        conn.setRequestMethod( "POST" );
+
+        //Send Post-Request
+        conn.setDoOutput(true);
+        conn.setRequestProperty( "charset", "utf-8");
+
+        DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
+        wr.writeBytes(urlParameters);
+        wr.flush();
+        wr.close();
+
+        BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+        String inputLine;
+        StringBuilder response = new StringBuilder();
+
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+
+        String answer = response.toString();
+        return answer;
     }
 }
 

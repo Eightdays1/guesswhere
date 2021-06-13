@@ -25,6 +25,10 @@ public class GameScreen extends AppCompatActivity {
     public static float guessed_coordinate_2;
 
     public static String gameid;
+    public static String challenge_url = "";
+    public static String usertype = "";
+
+    public static String message = "";
 
     public static int whichscreen = 0;
 
@@ -57,16 +61,18 @@ public class GameScreen extends AppCompatActivity {
                 super.onCreate(savedInstanceState);
                 setContentView(R.layout.activity_game_screen);
                 imageView=findViewById(R.id.imageView);
-
                 String Url = null;
-
-                try {
-                    Url = Database_test.getNewImage(MainScreen.user.getAccessToken());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                if(Url != null){
-                    Picasso.get().load(Url).into(imageView);
+                if (challenge_url == "") {
+                    try {
+                        Url = Database_test.getNewImage(MainScreen.user.getAccessToken());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    if (Url != null) {
+                        Picasso.get().load(Url).into(imageView);
+                    }
+                } else {
+                    Picasso.get().load(challenge_url).into(imageView);
                 }
                 Button button_guess = (Button) findViewById(R.id.button_guess);
 
@@ -79,13 +85,95 @@ public class GameScreen extends AppCompatActivity {
                 setContentView(R.layout.activity_game_select_user_screen);
                 TextView textedit_challengedUser = (TextView) findViewById(R.id.textedit_challengedname);
                 Button button_confirmChallenge = (Button) findViewById(R.id.button_confirmChallenge);
+                Button button_checkChallenge = (Button) findViewById(R.id.button_checkChallenge);
+                Button button_checkResults = (Button) findViewById(R.id.button_checkResults);
 
                 button_confirmChallenge.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View view) {
                         //database request
-                        String name = MainScreen.user.getUsername();
                         String challenged_user_name = textedit_challengedUser.getText().toString();
-                        //Fix once backend is there
+                        try {
+                            challenge_url = Database_test.requestChallenge(MainScreen.user.getAccessToken(), challenged_user_name);
+                            System.out.println(challenge_url);
+                            if ((challenge_url != "False")) {
+                                GameScreen.usertype = "sender";
+                                whichscreen = 1;
+                                startAnotherGameActivity();
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
+                button_checkChallenge.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View view){
+                        try {
+                            if(Database_test.checkForChallenge(MainScreen.user.getAccessToken())){
+                                challenge_url = Database_test.playChallengedGame(MainScreen.user.getAccessToken());
+                                if (challenge_url != "False") {
+                                    GameScreen.usertype = "reciever";
+                                    whichscreen = 1;
+                                    startAnotherGameActivity();
+                                }
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
+                button_checkResults.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View view){
+                        String answer = null;
+                        try {
+                            answer = Database_test.challengeResult(MainScreen.user.getAccessToken());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        if (answer != null) {
+                            answer = answer.replace("\"", "");
+                            answer = answer.replace("{", "");
+                            answer = answer.replace("}", "");
+                            boolean status = false;
+                            String username_sender = "";
+                            float distance_sender = 0;
+                            String username_reciever = "";
+                            float distance_reciever = 0;
+                            boolean result = true;
+
+                            System.out.println(answer);
+
+                            String[] array = answer.split(",");
+                            for(String i: array){
+                                if (i.startsWith("status:")){
+                                    status = Boolean.parseBoolean(i.substring(7));
+                                }
+                                if (i.startsWith("username_sender:")){
+                                    username_sender = i.substring(16);
+                                }
+                                if (i.startsWith("distance_sender:")){
+                                    distance_sender = Float.parseFloat(i.substring(16));
+                                }
+                                if (i.startsWith("username_reciever:")){
+                                    username_reciever = i.substring(18);
+                                }
+                                if (i.startsWith("distance_reciever:")){
+                                    distance_reciever = Float.parseFloat(i.substring(18));
+                                }
+                                if (i.startsWith("result:")){
+                                    result = Boolean.parseBoolean(i.substring(7));
+                                }
+                            }
+                            if (result == true){
+                                if (distance_sender < distance_reciever){
+                                    message = username_sender + " was " + (distance_reciever - distance_sender) + " closer than " + username_reciever + ".";
+                                } else {
+                                    message = username_reciever + " was " + (distance_sender - distance_reciever) + " closer than " + username_sender + ".";
+                                }
+                                openDialog();
+                            }
+                        }
                     }
                 });
                 break;
@@ -120,11 +208,20 @@ public class GameScreen extends AppCompatActivity {
                 button_see_on_map.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View view) {toMapResult(); }
                 });
-
-                try {
-                    Database_test.saveGame(GameScreen.gameid, guessed_coordinate_2, guessed_coordinate_1, d);
-                } catch (IOException e) {
-                    e.printStackTrace();
+                if (challenge_url == "") {
+                    try {
+                        Database_test.saveGame(GameScreen.gameid, guessed_coordinate_2, guessed_coordinate_1, d);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    try {
+                        Database_test.saveChallenge(MainScreen.user.getAccessToken(), GameScreen.usertype, GameScreen.gameid, guessed_coordinate_2, guessed_coordinate_1, d);
+                        challenge_url = "";
+                        usertype = "";
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
                 break;
         }
@@ -158,5 +255,10 @@ public class GameScreen extends AppCompatActivity {
     private void toMapResult(){
         Intent intent = new Intent(GameScreen.this, MapResult.class);
         startActivity(intent);
+    }
+
+    private void openDialog() {
+        PopupChallenge popup = new PopupChallenge();
+        popup.show(getSupportFragmentManager(), "label");
     }
 }
