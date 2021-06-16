@@ -629,9 +629,6 @@ public class Database_test extends AppCompatActivity {
 
         String[] array = answer.split(",");
         for(String i: array){
-            if (i.startsWith("status:")){
-                status = i.substring(7);
-            }
             if (i.startsWith("imagekey:")){
                 image_url = i.substring(9);
             }
@@ -682,8 +679,7 @@ public class Database_test extends AppCompatActivity {
         }
         in.close();
 
-        String answer = response.toString();
-        return answer;
+        return response.toString();
     }
 }
 

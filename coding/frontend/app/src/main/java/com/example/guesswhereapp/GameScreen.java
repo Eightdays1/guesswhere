@@ -62,7 +62,7 @@ public class GameScreen extends AppCompatActivity {
                 setContentView(R.layout.activity_game_screen);
                 imageView=findViewById(R.id.imageView);
                 String Url = null;
-                if (challenge_url == "") {
+                if (challenge_url.equals("")) {
                     try {
                         Url = Database_test.getNewImage(MainScreen.user.getAccessToken());
                     } catch (IOException e) {
@@ -95,7 +95,7 @@ public class GameScreen extends AppCompatActivity {
                         try {
                             challenge_url = Database_test.requestChallenge(MainScreen.user.getAccessToken(), challenged_user_name);
                             System.out.println(challenge_url);
-                            if ((challenge_url != "False")) {
+                            if (!(challenge_url.equals("False"))) {
                                 GameScreen.usertype = "sender";
                                 whichscreen = 1;
                                 startAnotherGameActivity();
@@ -111,7 +111,7 @@ public class GameScreen extends AppCompatActivity {
                         try {
                             if(Database_test.checkForChallenge(MainScreen.user.getAccessToken())){
                                 challenge_url = Database_test.playChallengedGame(MainScreen.user.getAccessToken());
-                                if (challenge_url != "False") {
+                                if ((challenge_url.equals("False"))) {
                                     GameScreen.usertype = "reciever";
                                     whichscreen = 1;
                                     startAnotherGameActivity();
@@ -208,7 +208,7 @@ public class GameScreen extends AppCompatActivity {
                 button_see_on_map.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View view) {toMapResult(); }
                 });
-                if (challenge_url == "") {
+                if (challenge_url.equals("")) {
                     try {
                         Database_test.saveGame(GameScreen.gameid, guessed_coordinate_2, guessed_coordinate_1, d);
                     } catch (IOException e) {
