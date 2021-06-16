@@ -111,7 +111,7 @@ public class GameScreen extends AppCompatActivity {
                         try {
                             if(Database_test.checkForChallenge(MainScreen.user.getAccessToken())){
                                 challenge_url = Database_test.playChallengedGame(MainScreen.user.getAccessToken());
-                                if ((challenge_url.equals("False"))) {
+                                if (!(challenge_url.equals("False"))) {
                                     GameScreen.usertype = "reciever";
                                     whichscreen = 1;
                                     startAnotherGameActivity();
